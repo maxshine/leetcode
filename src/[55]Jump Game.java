@@ -47,7 +47,7 @@ class Solution {
             memo[i] = Index.UNKNOWN;
         }
         memo[memo.length - 1] = Index.GOOD;
-        return canJumpFromPosition(0, nums);
+        return canJumpFromPositionDP(0, nums);
     }
 
     public boolean canJumpDP2(int[] nums) {
