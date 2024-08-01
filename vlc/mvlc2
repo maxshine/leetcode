@@ -1,0 +1,7 @@
+# The YouTube drop muxed formats with high resolution.
+# This tool makes use of yt-dlp to get separate video and audio formats
+# and let vlc to play them synchronously.
+#! /bin/bash
+video_url=$(/home/wayne/Develop/vscode/tensor_tutorial/venv/bin/python3 /home/wayne/Develop/vscode/tensor_tutorial/venv/bin/yt-dlp -f 'bv[acodec=none][height<=721]' --get-url $1)
+audio_url=$(/home/wayne/Develop/vscode/tensor_tutorial/venv/bin/python3 /home/wayne/Develop/vscode/tensor_tutorial/venv/bin/yt-dlp -f 'ba[vcodec=none]' --get-url $1)
+cvlc --input-slave="${audio_url}" "${video_url}" vlc://quit
