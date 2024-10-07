@@ -1,3 +1,14 @@
+"""This module defines the integration command line interface.
+
+Author:
+  Ryan,Gao (ryangao-au@outlook.com)
+Revision History:
+  Date         Author		   Comments
+------------------------------------------------------------------------------
+  01/06/2024   Ryan G.         v1.0 to handle pseudo-DRM with asterisk and colon
+  01/10/2024   Ryan G.         v2.0 to support pseudo-DRM with additional pipe
+"""
+
 import os
 import pathlib
 import shutil
@@ -25,11 +36,11 @@ def print_info():
     # 显示脚本文件信息
     print('**********************************************\n'
           '*                                            *\n'
-          '*           EPUB伪DRM去除工具  v1.0          *\n'
+          '*           EPUB伪DRM去除工具  v2.0            *\n'
           '*                                            *\n'
           '*                                            *\n'
-          '*                 作者：直心                 *\n'
-          '*            日期：2022年12月03日            *\n'
+          '*                 作者：Ryan G.               *\n'
+          '*            日期：2024年10月01日              *\n'
           '*                                            *\n'
           '**********************************************\n'
           )
@@ -41,7 +52,7 @@ def unzip_epub(epubfilename: str, tmp_dir: str):
     with zipfile.ZipFile(epubfilename, 'r') as zfile:
         nl = zfile.namelist()
         for l in tqdm.tqdm(nl, desc='正在解压epub文件', leave=False):
-            outpath = os.path.join(tmp_dir, l.replace('*', '0').replace(':', '1'))
+            outpath = os.path.join(tmp_dir, l.replace('*', '0').replace(':', '1').replace('|', '2'))
             z = zfile.read(l)
             os.makedirs(os.path.dirname(outpath), exist_ok=True)
             with open(outpath, 'wb') as f:
@@ -63,9 +74,9 @@ def fix_epub(tmp_dir: str, file_num: int):
     with tqdm.tqdm(total=file_num, desc='正在准备去除drm保护', leave=False) as show:
         for dirpath, dirnames, filenames in os.walk(tmp_dir):
             for filepath in filenames:
-                file_names_old.append(filepath.replace('0', '*').replace('1', ':'))
-                file_names_old_url.append(filepath.replace('0', '%2A').replace('1', '%3A'))
-                file_names_old_url_raw.append(filepath.replace('0', '*').replace('1', ':'))
+                file_names_old.append(filepath.replace('0', '*').replace('1', ':').replace('2', '|'))
+                file_names_old_url.append(filepath.replace('2', '%7C').replace('0', '%2A').replace('1', '%3A'))
+                file_names_old_url_raw.append(filepath.replace('0', '*').replace('1', ':').replace('2', '|'))
                 file_names_new.append(filepath)
                 # print(filepath.replace('0', '*').replace('1', ':'))
                 file_paths.append(os.path.join(dirpath, filepath))
